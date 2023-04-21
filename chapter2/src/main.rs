@@ -1,3 +1,5 @@
+use std::cmp;
+
 fn main() {
     let mut arr = [5, 3, 8, 1, 4, 2];
     sort_algorithm(&mut arr);
@@ -9,6 +11,16 @@ fn main() {
         Some(idx) => println!("Index found {}", idx),
         None => println!("No index found"),
     }
+
+    let a = vec![1, 0, 1, 1];
+    let b = vec![0, 0, 0, 0];
+
+    let sum = binary_add(&a, &b);
+    println!("Sum: {:?}", sum);
+
+    let c: i8 = 1 & 1;
+
+    println!("bitwise {}", c);
 }
 
 fn sort_algorithm<T: Ord>(arr: &mut [T]) {
@@ -30,4 +42,27 @@ fn search_algorithm<T: PartialEq>(search: &T, arr: &[T]) -> Option<usize> {
         }
     }
     None
+}
+
+fn binary_add(a: &[u8], b: &[u8]) -> Vec<u8> {
+    let mut carry = 0;
+    let n = cmp::max(a.len(), b.len());
+    let mut result = Vec::with_capacity(n + 1);
+
+    for i in 0..n {
+        // get the bit if any
+        let a_bit = *a.get(i).unwrap_or(&0);
+        let b_bit = *b.get(i).unwrap_or(&0);
+
+        let temp_sum = a_bit ^ b_bit ^ carry;
+        carry = (a_bit & b_bit) | (a_bit & carry) | (b_bit & carry);
+
+        result.push(temp_sum);
+    }
+
+    if carry != 0 {
+        result.push(carry);
+    }
+
+    result
 }
